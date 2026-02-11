@@ -3,7 +3,7 @@ import EmployeeTable from './components/EmployeeTable';
 import EmployeeModal from './components/EmployeeModal';
 import {useQuery} from '@tanstack/react-query';
 
-export const backendUrl = 'http://localhost:3000/api/employee';
+export const backendUrl = 'https://employee-management-zxyk.onrender.com/';
 
 const App = () => {
   async function fetchEmployeeDetails() {
