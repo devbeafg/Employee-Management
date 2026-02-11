@@ -1,34 +1,35 @@
-import pg from "pg"
-import env from "dotenv"
+import pg from "pg";
+import dotenv from "dotenv";
 
-env.config();
+dotenv.config();
 
-const requereEnvVars = [
-    "PG_USER", "PG_HOST", "PG_DATABASE", "PG_PORT", "PG_PASSWORD"
-]
+const { Pool } = pg;
 
-requereEnvVars.forEach((varName) => {
-    if(!process.env[varName]){
-        console.log(`missing required env variable: ${varName}`);
-        process.exit(1)
-    }
-});
+const isProduction = process.env.DATABASE_URL;
 
-const db = new pg.Pool({
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    database: process.env.PG_DATABASE,
-    port: process.env.PG_PORT,
-    password: process.env.PG_PASSWORD,
-})
+const pool = new Pool(
+  isProduction
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      }
+    : {
+        user: process.env.PG_USER,
+        host: process.env.PG_HOST,
+        database: process.env.PG_DATABASE,
+        port: process.env.PG_PORT,
+        password: process.env.PG_PASSWORD,
+      }
+);
 
-db.connect().then(() => console.log("Database is connected")).catch((err)=> {
-    console.log("Connection denied", err);
+pool.connect()
+  .then(() => console.log("Database connected"))
+  .catch((err) => {
+    console.error("Database connection error:", err);
     process.exit(1);
-});
+  });
 
-db.on("error", (err)=> {
-    console.log("Database erro: ", err)
-});
-
-export const query = (text, params) => db.query(text, params);
+export const query = (text, params) => pool.query(text, params);
+export default pool;
