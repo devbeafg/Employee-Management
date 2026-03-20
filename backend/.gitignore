@@ -1,0 +1,22 @@
+# Dependência local
+node_modules/
+
+# Variáveis de ambiente
+.env
+
+# Log
+npm-debug.log*
+yarn-debug.log*
+
+# Pasta de build
+dist/
+build/
+
+# Editor
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
