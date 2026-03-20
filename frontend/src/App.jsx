@@ -3,11 +3,18 @@ import EmployeeTable from './components/EmployeeTable';
 import EmployeeModal from './components/EmployeeModal';
 import {useQuery} from '@tanstack/react-query';
 
-export const backendUrl = 'https://employee-management-zxyk.onrender.com/api/employee';
+export const backendUrl = 'http://localhost:3000';
 
 const App = () => {
   async function fetchEmployeeDetails() {
     const res = await fetch(backendUrl);
+
+const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await res.text();
+      throw new Error(`O backend enviou texto em vez de JSON: "${text}"`);
+    }
+
     const data = await res.json();
 
     if(!res.ok){

@@ -8,13 +8,10 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const corsOptions = {
-    origin: "*",
-};
-
 app.use(cors({
   origin: "*"
 }));
+
 app.use(bodyParser.json());
 app.use("/api/employee", employeeRoutes)
 app.use((err, req, res, next) => {
