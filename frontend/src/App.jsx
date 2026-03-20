@@ -1,15 +1,16 @@
 import React from 'react'
 import EmployeeTable from './components/EmployeeTable';
 import EmployeeModal from './components/EmployeeModal';
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export const backendUrl = 'http://localhost:3000';
 
 const App = () => {
   async function fetchEmployeeDetails() {
-    const res = await fetch(backendUrl);
+    const res = await fetch(`${backendUrl}/api/employee`);
 
-const contentType = res.headers.get("content-type");
+    const contentType = res.headers.get("content-type");
+    console.log(contentType)
     if (!contentType || !contentType.includes("application/json")) {
       const text = await res.text();
       throw new Error(`O backend enviou texto em vez de JSON: "${text}"`);
@@ -17,27 +18,27 @@ const contentType = res.headers.get("content-type");
 
     const data = await res.json();
 
-    if(!res.ok){
+    if (!res.ok) {
       throw new Error(data.error);
     }
     return data;
   }
 
-  const {isPending, isError, data, error} = useQuery({
+  const { isPending, isError, data, error } = useQuery({
     queryKey: ["employee_details"],
     queryFn: fetchEmployeeDetails,
 
   });
 
-  if(isPending){
-    return(
+  if (isPending) {
+    return (
       <div>Loading</div>
-      
+
     )
   }
 
-  if(isError){
-    return(
+  if (isError) {
+    return (
       <div>{error.message}</div>
     )
   }

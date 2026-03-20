@@ -8,31 +8,31 @@ import toast from "react-hot-toast";
 import { queryClient } from "../utils/queryClients";
 
 
-const EmployeeTable = ({data}) => {
+const EmployeeTable = ({ data }) => {
 
-  if(!data?.length){
-    return(
+  if (!data?.length) {
+    return (
       <div>No employee data available</div>
     )
   }
 
   const mutation = useMutation({
-    mutationFn: async (id)=> {
-      const response = await fetch(`${backendUrl}/${id}`, {
+    mutationFn: async (id) => {
+      const response = await fetch(`${backendUrl}/api/employee/${id}`, {
         method: 'DELETE',
-        headers: {"Content-Type": "application/json"}
+        headers: { "Content-Type": "application/json" }
       });
 
       const result = response.status !== 204 ? await response.json() : null;
 
-      if(!response.ok) throw new Error(result.error)
-        return result
+      if (!response.ok) throw new Error(result.error)
+      return result
     },
 
     onError: (error) => toast.error(error.message),
-    onSuccess: ()=> {
+    onSuccess: () => {
       toast.success("Employee details deleted")
-      queryClient.invalidateQueries({queryKey: ["employee_details"]})
+      queryClient.invalidateQueries({ queryKey: ["employee_details"] })
     }
   })
   return (
@@ -52,7 +52,7 @@ const EmployeeTable = ({data}) => {
           </thead>
 
           <tbody>
-            {data.map((item)=> (
+            {data.map((item) => (
               <tr key={item.id} className='text-sm text-gray-700 rounded-2xl transition hover:bg-gray-200/60 shadow-[inset_1px_1px_2px_#e5e5e5]'>
                 <td className='py-4 px-4'>{item.id}</td>
                 <td className='py-4 px-4'>{item.name}</td>
@@ -62,8 +62,8 @@ const EmployeeTable = ({data}) => {
                 <td className='py-4 px-4'>{item.salary}</td>
                 <td className='py-4 px-4'>
                   <div className='flex items-center gap-4'>
-                    <button onClick={()=> mutation.mutate(item.id)} className='p-2 rounded-lg bg-gray-100 shadow-[3px_3px_6px_#c5c5c5,-3px_-3px_6px_#ffffff] hover:shadow-inner text-red-600 transition'><MdDeleteForever /></button>
-                    <EmployeeModal data={item} type='update'> 
+                    <button onClick={() => mutation.mutate(item.id)} className='p-2 rounded-lg bg-gray-100 shadow-[3px_3px_6px_#c5c5c5,-3px_-3px_6px_#ffffff] hover:shadow-inner text-red-600 transition'><MdDeleteForever /></button>
+                    <EmployeeModal data={item} type='update'>
                       <button className='p-2 rounded-lg bg-gray-100 shadow-[3px_3px_6px_#c5c5c5,-3px_-3px_6px_#ffffff] hover:shadow-inner text-green-600 transition'><MdEdit /></button>
                     </EmployeeModal>
                   </div>

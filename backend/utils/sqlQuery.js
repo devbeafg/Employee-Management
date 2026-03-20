@@ -1,21 +1,4 @@
-export const createRoleQuery = `
-    CREATE TYPE role_type AS ENUM('Developer', 'Manager', 'Sales', 'Admin', 'Intern')
-`;
 
-export const createEmployeeTableQuery = `
-    CREATE TABLE employee_details(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    age SMALLINT NOT NULL CHECK (age > 18),
-    role role_type NOT NULL DEFAULT 'Intern',
-    salary DECIMAL(8, 2) NOT NULL
-    )
-`;
-
-export const getAllEmployeeQuery = `
-    SELECT * FROM employee_details
-`;
 
 export const createEmployeeQuery = `
     INSERT INTO employee_details (name, email, age, role, salary)
